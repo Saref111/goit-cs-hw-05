@@ -7,18 +7,23 @@ logging.basicConfig(filename='file_sorting.log', level=logging.INFO,
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 async def read_folder(input_dir):
-    async for file in input_dir.iterdir():
-        if await file.is_file():
-            print(f'Found file: {file.name}')
-            yield file
+    try:
+        async for file in input_dir.iterdir():
+            if await file.is_file():
+                print(f'Found file: {file.name}')
+                yield file
+    except Exception as e:
+        logging.error(f'Error while reading folder: {e}')
 
 async def copy_file(file, output_dir):
-    subfolder_name = file.suffix[1:]
-    subfolder = output_dir / subfolder_name
-    await subfolder.mkdir(exist_ok=True)
-    destination = subfolder / file.name
-    await copyfile(file, destination)
-
+    try:
+        subfolder_name = file.suffix[1:]
+        subfolder = output_dir / subfolder_name
+        await subfolder.mkdir(exist_ok=True)
+        destination = subfolder / file.name
+        await copyfile(file, destination)
+    except Exception as e:
+        logging.error(f'Error while copying file: {e}')
 
 async def main(input_dir, output_dir):
     async for file in read_folder(input_dir):
