@@ -1,2 +1,4 @@
-output/**/*
-!output/.gitkeep
+async_file_sorting/output/**/*
+!async_file_sorting/output/.gitkeep
+
+__pycache__/
